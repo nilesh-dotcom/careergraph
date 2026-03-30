@@ -152,6 +152,20 @@ export async function POST(req: NextRequest) {
       marketInsights: insights.marketInsights,
       actionPlan: insights.actionPlan,
       jobMatches,
+      wowInsight: insights.wowInsight || {
+        title: "Your Growth Potential",
+        description: "With focused skill development, your market value can increase significantly",
+        metric: "20-30% salary growth potential"
+      },
+      resumeSuggestions: insights.resumeSuggestions || [
+        {
+          category: "Skills Section",
+          issue: "Missing quantified impact metrics",
+          suggestion: "Add specific metrics to your achievements (e.g., cost savings %, performance improvements, scale handled)",
+          impact: "High",
+          example: "Change 'Optimized database queries' to 'Optimized database queries, reducing latency by 40% and infrastructure costs by ₹X lakhs'"
+        }
+      ],
       generatedAt: new Date().toISOString(),
     };
 

@@ -79,7 +79,8 @@ Return this exact JSON structure:
       "salaryRange": { "min": 3000000, "max": 5500000, "currency": "INR" },
       "transitionDifficulty": "Moderate",
       "timelineMonths": 6,
-      "keyRequirements": ["People management", "System design"]
+      "keyRequirements": ["People management", "System design"],
+      "readinessScore": 72
     }
   ],
   "skillGaps": [
@@ -88,7 +89,9 @@ Return this exact JSON structure:
       "importance": "Critical",
       "userLevel": "Beginner",
       "marketDemand": 73,
-      "recommendation": "Specific action to take"
+      "recommendation": "Specific action to take",
+      "effortLevel": "Long-term Investment",
+      "impactLevel": "High"
     }
   ],
   "skillMatches": [
@@ -112,7 +115,35 @@ Return this exact JSON structure:
       "action": "Specific action to take",
       "category": "Skill",
       "priority": "High",
-      "details": "Detailed steps and resources"
+      "details": "Detailed steps and resources",
+      "weeklyCommitment": "5-7 hours",
+      "expectedOutcome": "Complete first 2 courses"
+    }
+  ],
+  "jobMatches": [
+    {
+      "title": "Senior Software Engineer",
+      "company": "TCS",
+      "location": "Bangalore",
+      "salary": "₹18-22L",
+      "matchScore": 85,
+      "matchReasons": ["Django", "System Design"],
+      "whyYouMatch": "You have 5+ years with Django and your system design skills align with their backend requirements",
+      "whyYouMightGetRejected": "May need to showcase more cloud infrastructure experience (AWS/GCP)"
+    }
+  ],
+  "wowInsight": {
+    "title": "Expected Salary Jump",
+    "description": "By following the Engineering Manager path and gaining leadership skills over 12 months, you could increase your salary by",
+    "metric": "₹25-30 lakhs per annum"
+  },
+  "resumeSuggestions": [
+    {
+      "category": "Skills Section",
+      "issue": "Missing high-demand skills from job descriptions",
+      "suggestion": "Add System Design, Kubernetes, and AI/ML experience to your resume to match 70% of senior backend postings",
+      "impact": "High",
+      "example": "Instead of just listing 'AWS', highlight 'AWS Solutions Architect certified with 35% infrastructure cost optimization experience'"
     }
   ]
 }
@@ -120,9 +151,23 @@ Return this exact JSON structure:
 Important rules:
 - Generate exactly 3 career paths
 - Generate 5-8 skill gaps (prioritize Critical and High importance)
+  - For each gap, set effortLevel: "Quick Win" (< 2 weeks), "Medium Effort" (1-3 months), or "Long-term Investment" (3+ months)
+  - Set impactLevel: "High" (transforms career), "Medium" (strengthens position), or "Low" (nice to have)
 - Generate 3-6 skill matches
 - Generate 4-6 market insights
 - Generate 10-14 action items covering 90 days (weeks 1-2, 3-4, 5-6, 7-8, 9-10, 11-12)
+  - For each action, set weeklyCommitment (e.g., "5-7 hours", "10 hours/week")
+  - For each action, set expectedOutcome (e.g., "Complete first 2 courses", "Build 1 project")
+- Generate 8-12 job matches with:
+  - whyYouMatch: Specific explanation of alignment to their profile
+  - whyYouMightGetRejected: Potential skill or experience gaps
+- Generate 1 wow insight tied to a specific career path
+  - Title should be compelling (e.g., "Expected Salary Jump")
+  - Metric should be specific and quantified
+- Generate 3-5 resume suggestions:
+  - Focus on: missing high-demand skills, weak quantification, poor targeting for desired role, missing certifications
+  - impact: "High" for critical gap fixes, "Medium" for incremental improvements
+  - Always provide concrete examples
 - Salary values must be in annual INR (not LPA notation, use actual numbers)
 - userCurrent salary should be estimated from their provided range
 - All insights must reference the user's specific skills, experience, and the real market data provided
@@ -164,5 +209,8 @@ Generate specific, actionable, data-backed career insights.`,
     skillMatches: insights.skillMatches as SkillMatch[],
     marketInsights: insights.marketInsights as MarketInsight[],
     actionPlan: insights.actionPlan as ActionItem[],
+    jobMatches: insights.jobMatches as any[],
+    wowInsight: insights.wowInsight as any,
+    resumeSuggestions: insights.resumeSuggestions as any[],
   };
 }

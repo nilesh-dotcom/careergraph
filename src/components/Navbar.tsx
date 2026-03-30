@@ -42,7 +42,7 @@ export default function Navbar() {
                       href="/analyze"
                       className="btn-primary text-sm py-2 px-5"
                     >
-                      Analyze My Career
+                      Get My Career Plan
                     </Link>
                     <div className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700">
                       <User className="w-4 h-4" />

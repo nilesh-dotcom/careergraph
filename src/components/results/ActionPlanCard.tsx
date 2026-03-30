@@ -1,7 +1,7 @@
 "use client";
 
 import { ActionItem } from "@/types";
-import { FileText, CheckCircle2 } from "lucide-react";
+import { FileText, CheckCircle2, Clock, Target } from "lucide-react";
 
 interface Props {
   actionPlan: ActionItem[];
@@ -36,7 +36,7 @@ export default function ActionPlanCard({ actionPlan }: Props) {
         </div>
         <div>
           <h2 className="text-lg font-semibold text-gray-900">90-Day Action Plan</h2>
-          <p className="text-sm text-gray-400">Week-by-week milestones to reach your next role</p>
+          <p className="text-sm text-gray-400">Week-by-week milestones with time commitment</p>
         </div>
       </div>
 
@@ -62,9 +62,9 @@ export default function ActionPlanCard({ actionPlan }: Props) {
                 return (
                   <div
                     key={i}
-                    className={`p-4 border border-gray-100 border-l-2 ${priorityConfig[item.priority]} rounded-xl`}
+                    className={`p-4 border border-gray-100 border-l-2 ${priorityConfig[item.priority]} rounded-xl bg-white hover:bg-gray-50/50 transition-colors`}
                   >
-                    <div className="flex items-start justify-between gap-3 mb-1.5">
+                    <div className="flex items-start justify-between gap-3 mb-2">
                       <div className="flex items-center gap-2">
                         <span className="text-base">{catConfig.emoji}</span>
                         <h4 className="text-sm font-semibold text-gray-900">
@@ -75,9 +75,22 @@ export default function ActionPlanCard({ actionPlan }: Props) {
                         {item.category}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-500 leading-relaxed">
+                    
+                    <p className="text-sm text-gray-600 leading-relaxed mb-3">
                       {item.details}
                     </p>
+
+                    {/* Effort & Outcome */}
+                    <div className="flex flex-wrap gap-3 pt-2 border-t border-gray-100">
+                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                        <Clock className="w-3.5 h-3.5 text-brand-600" />
+                        <span className="font-medium">{item.weeklyCommitment}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                        <Target className="w-3.5 h-3.5 text-green-600" />
+                        <span>{item.expectedOutcome}</span>
+                      </div>
+                    </div>
                   </div>
                 );
               })}
@@ -90,7 +103,7 @@ export default function ActionPlanCard({ actionPlan }: Props) {
         <div className="flex items-start gap-2">
           <CheckCircle2 className="w-4 h-4 text-brand-600 mt-0.5 flex-shrink-0" />
           <p className="text-sm text-brand-700">
-            <strong>Pro tip:</strong> High-priority items are marked with a blue left border. Focus on these first for maximum impact.
+            <strong>Pro tip:</strong> High-priority items are marked with a blue left border. Time commitments are realistic estimates—adjust based on your schedule.
           </p>
         </div>
       </div>

@@ -61,6 +61,7 @@ export interface CareerPath {
   transitionDifficulty: "Easy" | "Moderate" | "Hard";
   timelineMonths: number;
   keyRequirements: string[];
+  readinessScore: number; // 0-100, how ready you are for this path
 }
 
 // ---- Skill Gap ----
@@ -70,6 +71,8 @@ export interface SkillGap {
   userLevel: "Missing" | "Beginner" | "Intermediate" | "Advanced";
   marketDemand: number; // percentage of job postings requiring this
   recommendation: string;
+  effortLevel: "Quick Win" | "Medium Effort" | "Long-term Investment";
+  impactLevel: "High" | "Medium" | "Low";
 }
 
 export interface SkillMatch {
@@ -93,6 +96,8 @@ export interface ActionItem {
   category: "Skill" | "Certification" | "Project" | "Network" | "Application";
   priority: "High" | "Medium";
   details: string;
+  weeklyCommitment: string; // e.g., "5-7 hours"
+  expectedOutcome: string; // e.g., "Complete first 2 courses"
 }
 
 // ---- Job Matches ----
@@ -101,13 +106,30 @@ export interface JobMatch {
   company: string;
   location: string;
   salary?: string;
+  whyYouMatch: string; // Detailed explanation of match
+  whyYouMightGetRejected?: string; // Potential gaps
   matchScore: number; // 0-100
   matchReasons: string[];
   applyUrl?: string;
   postedDate?: string;
 }
 
-// ---- Full Report ----
+// ---- Wow Insight ----
+export interface WowInsight {
+  title: string;
+  description: string;
+  metric: string; // e.g., "₹15 Lakhs" or "12 months"
+}
+
+// ---- Resume Suggestions ----
+export interface ResumeSuggestion {
+  category: string; // e.g., "Skills Section", "Experience Highlights", "Summary"
+  issue: string; // What the issue is
+  suggestion: string; // Specific improvement recommendation
+  impact: "High" | "Medium" | "Low"; // Impact on hiring likelihood
+  example: string; // Example of how to implement
+}
+
 export interface CareerReport {
   profile: ParsedProfile;
   positioning: CareerPositioning;
@@ -117,6 +139,8 @@ export interface CareerReport {
   marketInsights: MarketInsight[];
   actionPlan: ActionItem[];
   jobMatches: JobMatch[];
+  wowInsight: WowInsight;
+  resumeSuggestions: ResumeSuggestion[];
   generatedAt: string;
 }
 

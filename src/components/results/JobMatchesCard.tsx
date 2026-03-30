@@ -1,7 +1,8 @@
 "use client";
 
 import { JobMatch } from "@/types";
-import { BriefcaseBusiness, ExternalLink, MapPin, Calendar } from "lucide-react";
+import { BriefcaseBusiness, ExternalLink, MapPin, Calendar, ChevronDown, ThumbsUp, AlertCircle } from "lucide-react";
+import { useState } from "react";
 
 interface Props {
   jobMatches: JobMatch[];
@@ -32,6 +33,99 @@ function MatchScore({ score }: { score: number }) {
   );
 }
 
+function JobCard({ job }: { job: JobMatch }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="border border-gray-100 rounded-xl overflow-hidden hover:border-brand-200 transition-all duration-200 group">
+      {/* Main job header */}
+      <div
+        className="flex items-start justify-between gap-4 p-4 hover:bg-brand-50/20 transition-colors cursor-pointer"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="text-sm font-semibold text-gray-900 truncate">
+              {job.title}
+            </h3>
+          </div>
+          <p className="text-sm text-gray-600 mb-2">{job.company}</p>
+
+          <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400 mb-2">
+            <span className="flex items-center gap-1">
+              <MapPin className="w-3 h-3" /> {job.location}
+            </span>
+            {job.salary && (
+              <span className="font-medium text-gray-600">{job.salary}</span>
+            )}
+            {job.postedDate && (
+              <span className="flex items-center gap-1">
+                <Calendar className="w-3 h-3" /> {timeAgo(job.postedDate)}
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-wrap gap-1">
+            {job.matchReasons.map((reason, j) => (
+              <span
+                key={j}
+                className="text-xs px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full"
+              >
+                {reason}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col items-end gap-3 flex-shrink-0">
+          <MatchScore score={job.matchScore} />
+          {job.applyUrl && (
+            <a
+              href={job.applyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 text-xs font-medium text-brand-700 hover:text-brand-800 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              Apply <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
+          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${expanded ? "rotate-180" : ""}`} />
+        </div>
+      </div>
+
+      {/* Expanded details */}
+      {expanded && (
+        <div className="border-t border-gray-100 p-4 bg-gray-50/50 space-y-3">
+          {/* Why you match */}
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <ThumbsUp className="w-4 h-4 text-green-600" />
+              <h4 className="text-sm font-semibold text-gray-900">Why you match</h4>
+            </div>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              {job.whyYouMatch}
+            </p>
+          </div>
+
+          {/* Why you might get rejected */}
+          {job.whyYouMightGetRejected && (
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <AlertCircle className="w-4 h-4 text-orange-600" />
+                <h4 className="text-sm font-semibold text-gray-900">What to strengthen</h4>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {job.whyYouMightGetRejected}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function JobMatchesCard({ jobMatches, isLocked = false }: Props) {
   const visibleJobs = isLocked ? jobMatches.slice(0, 3) : jobMatches;
 
@@ -51,58 +145,7 @@ export default function JobMatchesCard({ jobMatches, isLocked = false }: Props) 
 
       <div className="space-y-3">
         {visibleJobs.map((job, i) => (
-          <div
-            key={i}
-            className="flex items-start justify-between gap-4 p-4 border border-gray-100 rounded-xl hover:border-brand-200 hover:bg-brand-50/20 transition-all duration-200 group"
-          >
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-sm font-semibold text-gray-900 truncate">
-                  {job.title}
-                </h3>
-              </div>
-              <p className="text-sm text-gray-600 mb-2">{job.company}</p>
-
-              <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400 mb-2">
-                <span className="flex items-center gap-1">
-                  <MapPin className="w-3 h-3" /> {job.location}
-                </span>
-                {job.salary && (
-                  <span className="font-medium text-gray-600">{job.salary}</span>
-                )}
-                {job.postedDate && (
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-3 h-3" /> {timeAgo(job.postedDate)}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-1">
-                {job.matchReasons.map((reason, j) => (
-                  <span
-                    key={j}
-                    className="text-xs px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full"
-                  >
-                    {reason}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-col items-end gap-3 flex-shrink-0">
-              <MatchScore score={job.matchScore} />
-              {job.applyUrl && (
-                <a
-                  href={job.applyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs font-medium text-brand-700 hover:text-brand-800 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  Apply <ExternalLink className="w-3 h-3" />
-                </a>
-              )}
-            </div>
-          </div>
+          <JobCard key={i} job={job} />
         ))}
 
         {/* Locked overlay for remaining jobs */}

@@ -1,7 +1,7 @@
 "use client";
 
 import { SkillGap, SkillMatch } from "@/types";
-import { TrendingUp, AlertCircle, CheckCircle2 } from "lucide-react";
+import { TrendingUp, AlertCircle, CheckCircle2, Zap, Clock, Rocket } from "lucide-react";
 
 interface Props {
   skillGaps: SkillGap[];
@@ -14,6 +14,18 @@ const importanceConfig = {
   Medium: { color: "text-yellow-700 bg-yellow-50 border-yellow-200", dot: "bg-yellow-400" },
 };
 
+const effortConfig = {
+  "Quick Win": { color: "text-green-700 bg-green-50 border-green-200", icon: Zap, label: "⚡ 1-2 weeks" },
+  "Medium Effort": { color: "text-blue-700 bg-blue-50 border-blue-200", icon: Clock, label: "⏱ 1-3 months" },
+  "Long-term Investment": { color: "text-purple-700 bg-purple-50 border-purple-200", icon: Rocket, label: "🚀 3+ months" },
+};
+
+const impactConfig = {
+  High: "🔥 High Impact",
+  Medium: "📈 Medium Impact",
+  Low: "💡 Nice to Have",
+};
+
 export default function SkillGapCard({ skillGaps, skillMatches }: Props) {
   return (
     <div className="card p-6 sm:p-8">
@@ -23,7 +35,7 @@ export default function SkillGapCard({ skillGaps, skillMatches }: Props) {
         </div>
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Skill Gap Analysis</h2>
-          <p className="text-sm text-gray-400">Your skills vs. real job market requirements</p>
+          <p className="text-sm text-gray-400">Prioritized by effort vs. impact for smart learning</p>
         </div>
       </div>
 
@@ -36,7 +48,7 @@ export default function SkillGapCard({ skillGaps, skillMatches }: Props) {
           </div>
           <div className="space-y-3">
             {skillGaps.map((gap, i) => (
-              <div key={i} className="space-y-1.5">
+              <div key={i} className="space-y-1.5 p-4 bg-gray-50 rounded-lg border border-gray-100">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${importanceConfig[gap.importance].dot}`} />
@@ -56,6 +68,16 @@ export default function SkillGapCard({ skillGaps, skillMatches }: Props) {
                     className="h-full bg-gradient-to-r from-red-400 to-orange-400 rounded-full transition-all duration-700"
                     style={{ width: `${gap.marketDemand}%` }}
                   />
+                </div>
+
+                {/* Effort vs Impact */}
+                <div className="flex flex-wrap items-center gap-2 pt-1.5">
+                  <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full border ${effortConfig[gap.effortLevel].color}`}>
+                    {effortConfig[gap.effortLevel].label}
+                  </span>
+                  <span className="text-xs font-medium text-gray-600">
+                    {impactConfig[gap.impactLevel]}
+                  </span>
                 </div>
 
                 <p className="text-xs text-gray-500 leading-relaxed">{gap.recommendation}</p>

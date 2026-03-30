@@ -31,10 +31,10 @@ export default function PaywallBanner({ onUnlock }: Props) {
         </div>
 
         <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-          Unlock your full career report
+          Unlock Full Report
         </h3>
         <p className="text-gray-500 mb-6 text-sm leading-relaxed">
-          You've seen your career positioning and top paths. Unlock the complete report to get everything you need to make your move.
+          Get my full career plan before my next appraisal
         </p>
 
         <div className="grid sm:grid-cols-2 gap-2 mb-6">

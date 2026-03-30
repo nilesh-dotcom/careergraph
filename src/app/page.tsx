@@ -29,22 +29,18 @@ export default function LandingPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
-            Get a data-backed
+            Stop guessing your career.
             <br />
-            <span className="gradient-text">career strategy</span>
-            <br />
-            in 20 minutes
+            <span className="gradient-text">Start optimizing it.</span>
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            Upload your resume and discover exactly where you stand, what roles
-            fit you best, which skills to learn next, and your personalized
-            90-day action plan.
+            See your market position, salary gap, top 3 career paths, and a 90-day execution plan based on real job data in India.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/analyze" className="btn-primary text-lg px-8 py-4">
-              Analyze My Career
+              Get My Career Plan
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
             <a href="#how-it-works" className="btn-secondary text-lg px-8 py-4">

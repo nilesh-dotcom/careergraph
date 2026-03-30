@@ -15,6 +15,8 @@ import JobMatchesCard from "@/components/results/JobMatchesCard";
 import PaywallBanner from "@/components/results/PaywallBanner";
 import { CareerReport } from "@/types";
 import { Loader2, RefreshCw, AlertTriangle, Sparkles } from "lucide-react";
+import WowInsightCard from "@/components/results/WowInsightCard";
+import ResumeSuggestionsCard from "@/components/results/ResumeSuggestionsCard";
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -130,6 +132,16 @@ export default function ResultsPage() {
           {/* Section 2: Career Paths — Always visible */}
           <div className="mb-6">
             <CareerPathsCard careerPaths={report.careerPaths} />
+          </div>
+
+          {/* Section 2.5: Wow Insight — Always visible */}
+          <div className="mb-6">
+            <WowInsightCard insight={report.wowInsight} />
+          </div>
+
+          {/* Section 2.6: Resume Suggestions — Always visible */}
+          <div className="mb-6">
+            <ResumeSuggestionsCard suggestions={report.resumeSuggestions} />
           </div>
 
           {/* PAYWALL — shows after 2 free sections */}

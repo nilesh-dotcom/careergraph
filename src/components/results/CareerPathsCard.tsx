@@ -64,7 +64,7 @@ export default function CareerPathsCard({ careerPaths }: Props) {
             <p className="text-sm text-gray-600 mb-3 leading-relaxed">{path.fitReason}</p>
 
             {/* Metrics */}
-            <div className="flex flex-wrap items-center gap-4 mb-3 text-sm">
+            <div className="flex flex-wrap items-center gap-4 mb-4 text-sm">
               <div className="flex items-center gap-1.5 text-gray-500">
                 <TrendingUp className="w-4 h-4 text-green-500" />
                 <span>
@@ -74,6 +74,34 @@ export default function CareerPathsCard({ careerPaths }: Props) {
               <div className="flex items-center gap-1.5 text-gray-500">
                 <Clock className="w-4 h-4 text-brand-500" />
                 <span>{path.timelineMonths} months to transition</span>
+              </div>
+            </div>
+
+            {/* Readiness Bar */}
+            <div className="mb-3">
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-xs font-medium text-gray-600">Your Readiness</p>
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                  path.readinessScore >= 75
+                    ? "text-green-700 bg-green-50"
+                    : path.readinessScore >= 50
+                    ? "text-yellow-700 bg-yellow-50"
+                    : "text-orange-700 bg-orange-50"
+                }`}>
+                  {path.readinessScore}%
+                </span>
+              </div>
+              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-700 ${
+                    path.readinessScore >= 75
+                      ? "bg-gradient-to-r from-green-400 to-emerald-500"
+                      : path.readinessScore >= 50
+                      ? "bg-gradient-to-r from-yellow-400 to-orange-500"
+                      : "bg-gradient-to-r from-orange-400 to-red-500"
+                  }`}
+                  style={{ width: `${path.readinessScore}%` }}
+                />
               </div>
             </div>
 
