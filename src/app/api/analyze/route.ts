@@ -30,6 +30,48 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // ── File size validation (~5MB decoded ceiling) ───────────────────
+    if (resumeBase64.length > 7 * 1024 * 1024) {
+      return NextResponse.json(
+        { success: false, error: "File too large. Maximum size is 5MB." },
+        { status: 400 }
+      );
+    }
+
+    // ── Auth check ────────────────────────────────────────────────────
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options as CookieOptions)
+              );
+            } catch {
+              // Ignore cookie set errors
+            }
+          },
+        },
+      }
+    );
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
     // ── Check if API keys are configured ──────────────────────────────
     const hasOpenAI = process.env.OPENAI_API_KEY &&
       !process.env.OPENAI_API_KEY.startsWith("sk-your");
@@ -169,37 +211,10 @@ export async function POST(req: NextRequest) {
       generatedAt: new Date().toISOString(),
     };
 
-    // ── STEP 6: Save report to database if user is authenticated ──────
+    // ── STEP 6: Save report to database ──────────────────────────────
     let reportId: string | null = null;
     try {
-      const cookieStore = await cookies();
-      const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-          cookies: {
-            getAll() {
-              return cookieStore.getAll();
-            },
-            setAll(cookiesToSet) {
-              try {
-                cookiesToSet.forEach(({ name, value, options }) =>
-                  cookieStore.set(name, value, options as CookieOptions)
-                );
-              } catch {
-                // Ignore cookie set errors
-              }
-            },
-          },
-        }
-      );
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        reportId = await saveCareerReport(user.id, report);
-      }
+      reportId = await saveCareerReport(user.id, report);
     } catch (dbErr) {
       console.error("[CareerGraph] Database save failed:", dbErr);
       // Continue without saving to database
@@ -209,15 +224,13 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("[CareerGraph] Analysis error:", error);
 
-    // Surface a helpful error message
     let message = "Analysis failed. Please try again.";
     if (error.code === "insufficient_quota") {
-      message = "OpenAI quota exceeded. Please check your API key billing.";
-    } else if (error.code === "invalid_api_key") {
-      message = "Invalid OpenAI API key. Please check your .env.local file.";
-    } else if (error.message) {
-      message = error.message;
+      message = "Service temporarily unavailable. Please try again later.";
+    } else if (error.code === "context_length_exceeded") {
+      message = "Resume is too long to process. Please shorten it and try again.";
     }
+    // Do not surface error.message — may contain internal details
 
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }

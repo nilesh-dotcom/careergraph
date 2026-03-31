@@ -20,9 +20,9 @@ export function LoginForm() {
 
   useEffect(() => {
     const msg = searchParams.get("message");
-    if (msg) {
-      setMessage(msg);
-    }
+    const err = searchParams.get("error");
+    if (msg) setMessage(msg);
+    if (err) setError(err);
   }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
