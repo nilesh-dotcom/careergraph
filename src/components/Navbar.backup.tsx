@@ -2,18 +2,20 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BarChart3, LogOut, User, Settings } from "lucide-react";
+import { BarChart3, LogOut, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 
 export default function Navbar() {
-  const { user, isLoading, signOut } = useAuth();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
+  const supabase = createClient();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
-    await signOut();
+    await supabase.auth.signOut();
     router.push("/");
     setIsLoggingOut(false);
   };
@@ -42,15 +44,12 @@ export default function Navbar() {
                     >
                       Get My Career Plan
                     </Link>
-                    <Link
-                      href="/profile"
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition"
-                    >
+                    <div className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700">
                       <User className="w-4 h-4" />
                       <span className="hidden sm:inline">
                         {user.email?.split("@")[0]}
                       </span>
-                    </Link>
+                    </div>
                     <button
                       onClick={handleLogout}
                       disabled={isLoggingOut}

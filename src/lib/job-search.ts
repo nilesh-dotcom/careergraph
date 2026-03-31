@@ -123,6 +123,7 @@ export function matchJobsToProfile(
       company: job.employer_name,
       location: [job.job_city, job.job_state].filter(Boolean).join(", ") || "India",
       salary,
+      whyYouMatch: matchReasons.join(". ") || "Your profile aligns well with this opportunity",
       matchScore: Math.min(Math.round(score), 98),
       matchReasons:
         matchReasons.length > 0 ? matchReasons : ["Relevant to your profile"],

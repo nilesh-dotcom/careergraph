@@ -8,11 +8,13 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  signOut: () => Promise<void>;
-  updateProfile: (data: { full_name?: string; avatar_url?: string }) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  session: null,
+  isLoading: true,
+});
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -23,17 +25,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Get initial session
-    const initializeAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        setSession(session);
-        setUser(session?.user ?? null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initializeAuth();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
 
     // Listen for auth state changes
     const {
@@ -46,19 +42,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription?.unsubscribe();
   }, [supabase.auth]);
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  const updateProfile = async (data: { full_name?: string; avatar_url?: string }) => {
-    if (!user) throw new Error("User not authenticated");
-    await supabase.auth.updateUser({
-      data,
-    });
-  };
-
   return (
-    <AuthContext.Provider value={{ user, session, isLoading, signOut, updateProfile }}>
+    <AuthContext.Provider value={{ user, session, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
@@ -66,7 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
