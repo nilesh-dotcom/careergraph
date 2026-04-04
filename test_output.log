@@ -1,0 +1,28 @@
+
+> careergraph-ai@0.1.0 test
+> playwright test
+
+SyntaxError: /Users/nilesh/careergraph/tests/e2e/04-results-page.spec.ts: Unexpected token (121:0)
+
+  119 |     expect(hasMain).toBeGreaterThanOrEqual(0);
+  120 |   });
+> 121 | });
+      | ^
+  122 |
+  123 | test.describe('Results Page - Accessibility', () => {
+  124 |   test('should have headings with proper hierarchy', async ({ page }) => {
+
+   at 04-results-page.spec.ts:121
+
+  119 |     expect(hasMain).toBeGreaterThanOrEqual(0);
+  120 |   });
+> 121 | });
+  122 |
+  123 | test.describe('Results Page - Accessibility', () => {
+  124 |   test('should have headings with proper hierarchy', async ({ page }) => {
+
+[1A[2K
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report[39m
+[36m[39m
